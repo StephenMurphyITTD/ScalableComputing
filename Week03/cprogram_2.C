@@ -7,12 +7,15 @@
 #include <time.h>
 
 //declare one of our own functions so the compiler will understand the references below
-void printsomething (int , const char* );
+void printsomething (int, double, const char* );
 
 //declare an constant integer called arraysz of size 1000
 const int arraysz = 100000;
 
 int main (int argc, char** argv) {
+
+  // beging recording time taken to execute
+  clock_t begin = clock();
 
   //this is an integer array of size arraysz
   int intarray[arraysz];
@@ -29,9 +32,17 @@ int main (int argc, char** argv) {
        maxnumb = intarray[t];
     }
   }
-  printf("max numb is %d", maxnumb);
-  return 1;
+  // stop recording time
+  clock_t end = clock();
 
+  // finding the delta
+  double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+  printf("max numb is %d \n", maxnumb);
+
+  // print time taken
+  printf("Time taken to execute code was %f millieseconds \n", time_spent);
+  return 1;
 }
 
 // this is the implementation of the function declared above
