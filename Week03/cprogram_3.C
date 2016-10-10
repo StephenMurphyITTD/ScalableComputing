@@ -34,7 +34,7 @@ int main (int argc, char** argv) {
   //perform linear search
   int totalnumb = 0;
   for (int t = 0; t < arraysz; t++) {
-    if (intarray[t] = pickedint) {
+    if (intarray[t] == pickedint) {
        totalnumb += 1;
     }
   }
@@ -44,7 +44,7 @@ int main (int argc, char** argv) {
   // finding the delta
   double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
-  printf("max numb is %d \n", totalnumb);
+  printf("Total Number of Tiems your number occured is %d \n", totalnumb);
 
   // print time taken
   printf("Time taken to execute code was %f millieseconds \n", time_spent);
