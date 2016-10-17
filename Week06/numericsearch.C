@@ -51,6 +51,17 @@ int main (void)
    int i;
 
    count = 0; 
+  
+   #pragma omp parallel
+   {
+    if(omp_get_thread_num()==0)
+       {
+       printf("There are %d number of threads \n", omp_get_num_threads());
+ //  printf("There are %d\n", omp_get_thread_num());
+       }       
+ 
+   }
+ 
    #pragma omp parallel for //reduction (+:count)
    for (i = 0; i < 1000000; i++)
       if (no_problem_with_digits (i)) {
