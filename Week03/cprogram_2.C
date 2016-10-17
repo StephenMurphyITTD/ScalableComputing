@@ -21,12 +21,15 @@ int main (int argc, char** argv) {
   int intarray[arraysz];
   srand(time(NULL)); 
   
+  // THIS PARALLELISM CAN BE IMPLEMENTED ON THIS FOR LOOP
   for (int t = 0; t < arraysz; t++) {
     intarray[t] = rand();
   }
-
+  
   //perform linear search
   int maxnumb = intarray[0];
+  
+  // THIS PARALLELISM CAN BE IMPLEMENTED ON THIS FOR LOOP
   for (int t = 0; t < arraysz; t++) {
     if (intarray[t] > maxnumb) {
        maxnumb = intarray[t];
