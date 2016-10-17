@@ -22,6 +22,7 @@ int main (int argc, char** argv) {
   int intarray[arraysz];
   srand(time(NULL)); 
   
+  // PARALLELISM CAN BE IMPLEMENTED ON THIS FOR LOOP
   for (int t = 0; t < arraysz; t++) {
     intarray[t] = rand();
   }
@@ -45,6 +46,7 @@ int avgval (int intarray[]){
   int sum = 0;
   int average = 0;
 
+  // PARALLELISM CAN BE IMPLEMENTED ON THIS FOR LOOP
   for (int t = 0; t < arraysz; t++){
      sum += intarray[t];
   }
