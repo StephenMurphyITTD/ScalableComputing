@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <omp.h>
 
 //declare one of our own functions so the compiler will understand the references below
 void printsomething (int, double, const char* );
@@ -13,6 +14,19 @@ void printsomething (int, double, const char* );
 const int arraysz = 1000000;
 
 int main (int argc, char** argv) {
+
+  /*
+  #pragma omp parallel
+  {
+    printf("TID is %d\n", omp_get_thread_num());
+  } 
+
+  int n = 8;
+  #pragma omp parallel for
+  for (int i = 0; i < n; i++){
+     printf("FOR TID is %d\n", omp_get_thread_num());
+  }*/
+
 
   // beging recording time taken to execute
   clock_t begin = clock();
@@ -38,11 +52,20 @@ int main (int argc, char** argv) {
 
   //perform linear search
   int totalnumb = 0;
-  
-  // PARALLELISM CAN BE IMPLEMENTED ON THIS FOR LOOP
+
   for (int t = 0; t < arraysz; t++) {
     if (intarray[t] >= userintone && intarray[t] <= userinttwo ) {
        totalnumb += 1;
+    }
+  }
+  
+  int totalnumb2 = 0;
+
+  // PARALLELISM CAN BE IMPLEMENTED ON THIS FOR LOOP
+  #pragma omp parallel for reduction (+:totalnumb2)
+  for (int t = 0; t < arraysz; t++) {
+    if (intarray[t] >= userintone && intarray[t] <= userinttwo ) {
+       totalnumb2 += 1;
     }
   }
   // stop recording time
@@ -51,7 +74,8 @@ int main (int argc, char** argv) {
   // finding the delta
   double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
-  printf("Number of times your number occured is %d \n", totalnumb);
+  printf("Number of times your number occured while ST is %d \n", totalnumb);
+  printf("Number of times your number occured while MT is %d \n", totalnumb2);
 
   // print time taken
   printf("Time taken to execute code was %f millieseconds \n", time_spent);
