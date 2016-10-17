@@ -17,6 +17,7 @@
  */
 
 #include <stdio.h>
+#include <omp.h>
 
 int no_problem_with_digits (int i)
 {
@@ -50,8 +51,10 @@ int main (void)
    int i;
 
    count = 0; 
+   #pragma omp parallel for //reduction (+:count)
    for (i = 0; i < 1000000; i++)
       if (no_problem_with_digits (i)) {
+        #pragma omp atomic
         count++;
       }
    printf ("There are %d acceptable ID numbers\n", count);
