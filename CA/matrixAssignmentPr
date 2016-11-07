@@ -1,0 +1,112 @@
+/** 
+	g++ -fopenmp -o MatrixPr matrixAssignmentPr.C
+							**/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <omp.h>
+#include <time.h>
+ 
+int main()
+{
+    int firstMa[1000][1000], secondMa[1000][1000], multiMa[1000][1000], multiMaPr[1000][1000], n1, m1, m2, p2, i, j, k;
+  
+    printf("Enter the number of rows and columns of first matrix\n");
+    scanf("%d%d", &n1, &m1);
+
+    printf("Enter the number of rows and columns of second matrix\n");
+    scanf("%d%d", &m2, &p2);
+
+    //check to ensure matrix 1 and matrix 2 have the correct number of rows and columns for cross multipication
+    if (m1!=m2)
+    {
+        printf("Error! column of first matrix not equal to row of second.\n");
+
+        printf("Enter the number of rows and columns of first matrix\n");
+    	scanf("%d%d", &n1, &m1);
+
+    	printf("Enter the number of rows and columns of second matrix\n");
+    	scanf("%d%d", &m2, &p2);
+    }
+
+    //randomly assign values to Matrix A
+    for (i = 0; i < n1; i++)
+        for (j = 0; j < m1; j++)
+            //scanf("%d", &firstMa[i][j]);
+            firstMa[i][j] = rand() % 10;
+
+    printf("Matrix A (randomly assigned):\n");
+    for (i = 0; i < n1; i++) {
+        for (j = 0; j < m2; j++)
+            printf("%d\t", firstMa[i][j]);
+        printf("\n");
+    }
+
+    //randomly assign values to Matrix B
+    for (i = 0; i < m2; i++)
+        for (j = 0; j < p2; j++)
+            //scanf("%d", &secondMa[i][j]);
+            secondMa[i][j] = rand() % 10;
+
+
+    printf("Matrix B (randomly assigned):\n");
+    for (i = 0; i < n1; i++) {
+        for (j = 0; j < m2; j++)
+            printf("%d\t", secondMa[i][j]);
+        printf("\n");
+    }
+
+    clock_t beginST = clock();
+    //initialize an empty multiplication matrix
+    for (i = 0; i < n1; ++i)
+        for(j = 0; j < p2; ++j)
+            multiMa[i][j]=0;
+
+    //perform the multipication
+    for(i = 0; i < n1; ++i)
+        for(j = 0; j < p2; ++j)
+            for(k = 0; k < m1; ++k)
+                multiMa[i][j] += firstMa[i][k] * secondMa[k][j];
+ 
+ 
+    //output the contents of the entire matrix
+    printf("The Product of Matrix 1 and Matrix 2 is:\n");
+    for (i = 0; i < n1; i++) {
+        for (j = 0; j < p2; j++)
+            printf("%d\t", multiMa[i][j]);
+        printf("\n");
+    }
+
+    clock_t endST = clock();
+    double time_spentST = (double)(endST - beginST) / CLOCKS_PER_SEC;
+/**
+		PARALLEL
+					**/
+    clock_t beginMT = clock();
+    //PARALLEL: initialize an empty multiplication matrix 
+    #pragma omp for
+    for (i = 0; i < n1; ++i)
+        for(j = 0; j < p2; ++j)
+            multiMaPr[i][j]=0;
+
+    //PARALLEL: perform the multipication    #pragma omp parallel
+    #pragma omp for
+    for(i = 0; i < n1; ++i) 
+        for(j = 0; j < p2; ++j)
+            for(k = 0; k < m1; ++k)
+                multiMaPr[i][j] += firstMa[i][k] * secondMa[k][j];
+
+    //PARALLEL: output the contents of the entire matrix
+    printf("PARALLEL: The Product of Matrix 1 and Matrix 2 is:\n");
+    #pragma omp for
+    for (i = 0; i < n1; i++) {
+        for (j = 0; j < p2; j++)
+            printf("%d\t", multiMaPr[i][j]);
+        printf("\n");
+    }
+    clock_t endMT = clock();
+    double time_spentMT = (double)(endMT - beginMT) / CLOCKS_PER_SEC;
+
+     printf("Time taken to execute multiplication in Serial was %f millieseconds \n", time_spentST);
+     printf("Time taken to execute multiplication in Parallel was %f millieseconds \n", time_spentMT);
+}
